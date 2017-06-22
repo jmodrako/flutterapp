@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
         // IntelliJ). Notice that the counter didn't reset back to zero;
         // the application is not restarted.
         primarySwatch: Colors.blue,
+        splashColor: Colors.blue,
       ),
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -95,15 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // main axis here is the vertical axis because Columns are
           // vertical (the cross axis would be horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '${_counter}',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+          children: <Widget>[new BeerCard()],
         ),
       ),
       floatingActionButton: new FloatingActionButton(
@@ -111,6 +104,76 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class BeerCard extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => new _BeerCardState();
+}
+
+class _BeerCardState extends State<BeerCard> {
+
+  double rating = 4.3;
+  String title = "Deer Beard";
+  String subtitle = "BROWAR DEER BEAR";
+  String imageUrl = "https://www.polskikraft.pl/img/photos/1448032800.jpg";
+  Color titleSectionBackground = new Color(0xA0000000);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Material(
+        elevation: 2.0,
+        borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
+        type: MaterialType.card,
+        child: new Container(
+            width: 224.0,
+            height: 264.0,
+            decoration: new BoxDecoration(
+                image: new DecorationImage(
+                    fit: BoxFit.cover,
+                    image: new NetworkImage(imageUrl)
+                )
+            ),
+            child: new Container(
+                alignment: FractionalOffset.bottomLeft,
+                padding: const EdgeInsets.all(12.0),
+                decoration: new BoxDecoration(
+                    color: titleSectionBackground
+                ),
+                child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Text(
+                          rating.toString(),
+                          maxLines: 1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .display2
+                              .apply(color: Colors.white, fontWeightDelta: 2)),
+                      new Text(
+                          title,
+                          maxLines: 1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .display1
+                              .apply(color: Colors.white)),
+                      new Text(
+                          subtitle.toUpperCase(),
+                          maxLines: 1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .body1
+                              .apply(color: Colors.white, fontSizeFactor: 1.2))
+                    ])
+            )
+        )
     );
   }
 }
