@@ -120,60 +120,68 @@ class _BeerCardState extends State<BeerCard> {
   String title = "Deer Beard";
   String subtitle = "BROWAR DEER BEAR";
   String imageUrl = "https://www.polskikraft.pl/img/photos/1448032800.jpg";
-  Color titleSectionBackground = new Color(0xA0000000);
 
   @override
   Widget build(BuildContext context) {
     return new Material(
-        elevation: 2.0,
+        elevation: 12.0,
         borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
         type: MaterialType.card,
         child: new Container(
-            width: 224.0,
-            height: 264.0,
+            constraints: new BoxConstraints.tightFor(
+                width: 224.0, height: 264.0),
             decoration: new BoxDecoration(
                 image: new DecorationImage(
                     fit: BoxFit.cover,
                     image: new NetworkImage(imageUrl)
                 )
             ),
-            child: new Container(
+            child: new Stack(
                 alignment: FractionalOffset.bottomLeft,
-                padding: const EdgeInsets.all(12.0),
-                decoration: new BoxDecoration(
-                    color: titleSectionBackground
-                ),
-                child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Text(
-                          rating.toString(),
-                          maxLines: 1,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .display2
-                              .apply(color: Colors.white, fontWeightDelta: 2)),
-                      new Text(
-                          title,
-                          maxLines: 1,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .display1
-                              .apply(color: Colors.white)),
-                      new Text(
-                          subtitle.toUpperCase(),
-                          maxLines: 1,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .body1
-                              .apply(color: Colors.white, fontSizeFactor: 1.2))
-                    ])
-            )
-        )
+                children: <Widget>[
+                  new Container(
+                      constraints: new BoxConstraints.tightFor(
+                          width: double.INFINITY),
+                      child: new Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: new BoxDecoration(
+                              color: Colors.black45
+                          ),
+                          child: new Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                new Text(
+                                    rating.toString(),
+                                    maxLines: 1,
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .display1
+                                        .apply(
+                                        color: Colors.white,
+                                        fontWeightDelta: 2)),
+                                new Text(
+                                    title,
+                                    maxLines: 1,
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .display1
+                                        .apply(color: Colors.white)),
+                                new Text(
+                                    subtitle.toUpperCase(),
+                                    maxLines: 1,
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .body1
+                                        .apply(
+                                        color: Colors.white,
+                                        fontSizeFactor: 1.2))
+                              ]))
+                  )
+                ]))
     );
   }
 }
