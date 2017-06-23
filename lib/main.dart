@@ -1,139 +1,125 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterapp/data/DataSource.dart';
+import 'package:flutterapp/data/model/beermodel.dart';
+
+typedef void BeerTapCallback(BeerModel photo);
+
+List<Widget> _buildGridTileList(List<BeerModel> models, BuildContext context) {
+  return new List<Widget>.generate(
+      models.length, (int index) =>
+  new GestureDetector(
+      onTap: () {
+        Scaffold.of(context).showSnackBar(
+            new SnackBar(content: new Text(models[index].title)));
+      },
+      child: new BeerCard(models[index])));
+}
+
+Widget buildGrid(BuildContext context) {
+  return new GridView.count(
+      crossAxisCount: 2,
+      padding: const EdgeInsets.all(4.0),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+      children: _buildGridTileList(new DataSource().getBeers(), context));
+}
 
 void main() {
   runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting
-        // the app, try changing the primarySwatch below to Colors.green
-        // and then invoke "hot reload" (press "r" in the console where
-        // you ran "flutter run", or press Run > Hot Reload App in
-        // IntelliJ). Notice that the counter didn't reset back to zero;
-        // the application is not restarted.
-        primarySwatch: Colors.blue,
-        splashColor: Colors.blue,
-      ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Polski Kraft',
+        theme: new ThemeData(
+            primarySwatch: Colors.amber,
+            splashColor: const Color(0x66C8C8C8)
+        ),
+        home: new HomeView(title: 'Polski Kraft'));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful,
-  // meaning that it has a State object (defined below) that contains
-  // fields that affect how it looks.
-
-  // This class is the configuration for the state. It holds the
-  // values (in this case the title) provided by the parent (in this
-  // case the App widget) and used by the build method of the State.
-  // Fields in a Widget subclass are always marked "final".
+class HomeView extends StatefulWidget {
+  HomeView({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _HomeViewState createState() => new _HomeViewState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomeViewState extends State<HomeView> {
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that
-      // something has changed in this State, which causes it to rerun
-      // the build method below so that the display can reflect the
-      // updated values. If we changed _counter without calling
-      // setState(), then the build method would not be called again,
-      // and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  List<Tab> tabs = <Tab>[
+    new Tab(text: "Home"),
+    new Tab(text: "Na Topie"),
+    new Tab(text: "Najlepsze"),
+    new Tab(text: "Najnowsze"),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance
-    // as done by the _incrementCounter method above.
-    // The Flutter framework has been optimized to make rerunning
-    // build methods fast, so that you can just rebuild anything that
-    // needs updating rather than having to individually change
-    // instances of widgets.
     return new Scaffold(
       appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that
-        // was created by the App.build method, and use it to set
-        // our appbar title.
-        title: new Text(widget.title),
+        title: new Text("Polski Kraft"),
       ),
-      body: new Center(
-        // Center is a layout widget. It takes a single child and
-        // positions it in the middle of the parent.
-        child: new Column(
-          // Column is also layout widget. It takes a list of children
-          // and arranges them vertically. By default, it sizes itself
-          // to fit its children horizontally, and tries to be as tall
-          // as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you
-          // ran "flutter run", or select "Toggle Debug Paint" from the
-          // Flutter tool window in IntelliJ) to see the wireframe for
-          // each widget.
-          //
-          // Column has various properties to control how it sizes
-          // itself and how it positions its children. Here we use
-          // mainAxisAlignment to center the children vertically; the
-          // main axis here is the vertical axis because Columns are
-          // vertical (the cross axis would be horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[new BeerCard()],
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: new Builder(
+          builder: (BuildContext context) {
+            return new Column(
+                children: <Widget>[
+                  new Expanded(
+                    child: buildGrid(context),
+                  ),
+                ]);
+          }),
+      bottomNavigationBar: new BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: (selectedIndex) {
+            print(selectedIndex.toString());
+          },
+          currentIndex: 0,
+          items: <BottomNavigationBarItem>[
+            new BottomNavigationBarItem(
+              title: new Text("Home"),
+              icon: new Placeholder(),
+            ),
+            new BottomNavigationBarItem(
+              title: new Text("Na Topie"),
+              icon: new Placeholder(),
+            ),
+            new BottomNavigationBarItem(
+              title: new Text("Najlepsze"),
+              icon: new Placeholder(),
+            ),
+            new BottomNavigationBarItem(
+              title: new Text("Najnowsze"),
+              icon: new Placeholder(),
+            ),
+          ]),
     );
   }
 }
 
-class BeerCard extends StatefulWidget {
+class BeerCard extends StatelessWidget {
 
-  @override
-  State<StatefulWidget> createState() => new _BeerCardState();
-}
+  const BeerCard(this.beerModel) : super(key: null);
 
-class _BeerCardState extends State<BeerCard> {
-
-  double rating = 4.3;
-  String title = "Deer Beard";
-  String subtitle = "BROWAR DEER BEAR";
-  String imageUrl = "https://www.polskikraft.pl/img/photos/1448032800.jpg";
+  @required final BeerModel beerModel;
 
   @override
   Widget build(BuildContext context) {
     return new Material(
-        elevation: 12.0,
+        elevation: .0,
         borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
         type: MaterialType.card,
         child: new Container(
-            constraints: new BoxConstraints.tightFor(
-                width: 224.0, height: 264.0),
             decoration: new BoxDecoration(
                 image: new DecorationImage(
                     fit: BoxFit.cover,
-                    image: new NetworkImage(imageUrl)
+                    image: new NetworkImage(beerModel.imageUrl)
                 )
             ),
             child: new Stack(
@@ -145,14 +131,14 @@ class _BeerCardState extends State<BeerCard> {
                       child: new Container(
                           padding: const EdgeInsets.all(12.0),
                           decoration: new BoxDecoration(
-                              color: Colors.black45
+                              color: Colors.black54
                           ),
                           child: new Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Text(
-                                    rating.toString(),
+                                    beerModel.rating.toString(),
                                     maxLines: 1,
                                     style: Theme
                                         .of(context)
@@ -160,18 +146,20 @@ class _BeerCardState extends State<BeerCard> {
                                         .display1
                                         .apply(
                                         color: Colors.white,
-                                        fontWeightDelta: 2)),
+                                        fontWeightDelta: 1)),
                                 new Text(
-                                    title,
+                                    beerModel.title,
                                     maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: Theme
                                         .of(context)
                                         .textTheme
-                                        .display1
+                                        .title
                                         .apply(color: Colors.white)),
                                 new Text(
-                                    subtitle.toUpperCase(),
+                                    beerModel.subtitle.toUpperCase(),
                                     maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: Theme
                                         .of(context)
                                         .textTheme
@@ -185,3 +173,4 @@ class _BeerCardState extends State<BeerCard> {
     );
   }
 }
+
